@@ -20,7 +20,7 @@ DocuMind is a multi-agent document intelligence system that performs multi-hop r
    - [Deployment](#43-deployment)
 - [Frontend](#frontend)
 
-![System Architecture](system-architecture.png)
+![System Architecture](system-architecture.svg)
 
 ## 1. Data Ingestion Pipeline
 

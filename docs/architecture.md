@@ -18,6 +18,7 @@ DocuMind is a multi-agent document intelligence system that performs multi-hop r
    - [Evaluation Engine](#41-evaluation-engine)
    - [Observability](#42-observability)
    - [Deployment](#43-deployment)
+   - [PostgreSQL](#44-postgresql)
 - [Frontend](#frontend)
 
 ![System Architecture](system-architecture.svg)
@@ -40,7 +41,7 @@ HuggingFace's Sentence Transformer ([SBERT](https://huggingface.co/sentence-tran
 
 ### 1.4. Vector Store
 
-[Qdrant](https://qdrant.tech/) will be used to store and index these vector embeddings. Each vector will have its own metadata. Qdrant is chosen over FAISS because it is an open-source, production-ready vector database that provides some internal features like hybrid search.
+[Qdrant](https://qdrant.tech/) will be used to store and index these vector embeddings. Each vector will have its own metadata like `document_name`,`page_number`,`section`,`chunk_id`,. Qdrant is chosen over FAISS because it is an open-source, production-ready vector database that provides some internal features like hybrid search.
 
 ## 2. Retrieval Layer
 
@@ -63,7 +64,7 @@ Using a cross-encoder re-ranker, the top-20 results retrieved from hybrid search
 DocuMind is a multi-agent system, where every task is done by a task-specific AI agent. This project is intended to use 4 AI agents, each with a dedicated task from task planning to the final response:
 
 - <b>Orchestrator Agent:</b> This agent will plan the task and route the request to other agents.
-- <b>Retrieval Agent:</b> This agent will search for the specific information from the vector database and retrieve it.
+- <b>Retrieval Agent:</b> As shown in [Retrieval Layer](#22-hybrid-search), this agent will search for the specific information from the vector database and retrieve it. It will be a function call and not an LLM action
 - <b>Reasoning Agent:</b> This agent will analyse the retrieved intermediate information and extract specific facts
 - <b>Answer Agent:</b> This agent will answer the query based upon all the retrieved intermediate answers with a proper citation for each of the facts.
 
@@ -81,6 +82,14 @@ Since all of the multi-agent system is wrapped under REST endpoints, tracing the
 
 The system will be deployed through a Docker container to a live URL using Railway or Fly.io. The CI/CD pipeline will be created on GitHub actions, which will run a test suite and an evaluation suite on the golden-test set on every push to the main branch.
 
-## Frontend
+### 4.4. PostgreSQL
+
+PostgreSQL will be used as the evaluation storage to store the performance evaluation of the system. It will store the information as follows:
+- <b>scores</b>: `score_id`, `user_prompt`, `final_llm_output`, `faithfulness`, `context_precision`, `context_recall`, `answer_relevancy`, `llm_judge_score`, `llm_judge_feedback`, `timestamp`
+- <b>chunks</b>: `chunk_id`, `score_id`, `retrieved_chunk`
+
+`scores` and `chunks` table will have a 1:N relationship where chunks will store all the retrieved chunks for that user prompt. These data will be written to the database in async manner to not increase the response time
+
+## 5. Frontend
 
 To make this application accessible and presentable to users, a frontend using Streamlit will be developed. 

@@ -6,11 +6,11 @@ DocuMind is a multi-agent document intelligence system that performs multi-hop r
 
 - [Data Ingestion Pipeline](#1-data-ingestion-pipeline)
    - [Document Loader](#11-document-loader)
-   - [Chunking Module](#12-chunking)
-   - [Embedding](#13-embedding)
+   - [Chunking Module](#12-chunking-module)
+   - [Embedding](#13-embedding-model)
    - [Vector Store](#14-vector-store)
 - [Retrieval Layer](#2-retrieval-layer)
-   - [Query Expansion & Understanding](#21-query-exapansion--understanding)
+   - [Query Expansion & Understanding](#21-query-expansion--understanding)
    - [Hybrid Search](#22-hybrid-search)
    - [Re-Ranking](#23-re-ranking)
 - [Agent Orchestration Layer](#3-agent-orchestration-layer)
@@ -19,7 +19,7 @@ DocuMind is a multi-agent document intelligence system that performs multi-hop r
    - [Observability](#42-observability)
    - [Deployment](#43-deployment)
    - [PostgreSQL](#44-postgresql)
-- [Frontend](#frontend)
+- [Frontend](#5-frontend)
 
 ![System Architecture](system-architecture.svg)
 
@@ -76,7 +76,7 @@ This layer deals with Evaluation, Observability and Deployments. This layer will
 In RAG-based AI Systems, measuring the output quality is very important. Hence, this engine will use RAGAS and an LLM-as-a-judge to score the outputs. Moreover, a golden-test set of 30-50 manually created question-answer pairs will be created to test the system failures.
 
 ### 4.2. Observability
-Since all of the multi-agent system is wrapped under REST endpoints, tracing the request flow in a well-structured JSON log will be implemented with either LangSmith or Phoenix. Each log will have consistent fields like ``trace_id``, ``model``, ``status``, etc., to ensure better traceability and observability. Moreover, endpoints like  `/metrics` and `/health` will be exposed. 
+Since all the multi-agent system is wrapped under REST endpoints, tracing the request flow in a well-structured JSON log will be implemented with either LangSmith or Phoenix. Each log will have consistent fields like ``trace_id``, ``model``, ``status``, etc., to ensure better traceability and observability. Moreover, endpoints like  `/metrics` and `/health` will be exposed. 
 
 ### 4.3. Deployment
 
